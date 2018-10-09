@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  db:
+    image: "postgres"
+    hostname: db
+    environment:
+      POSTGRES_USER: guacamole
+      POSTGRES_PASSWORD: guacamole
+    volumes:
+     - postgres_database:/var/lib/postgresql/data:Z
+     - ./sql-scripts/:/docker-entrypoint-initdb.d/
+
+  guacd:
+    image: "guacamole/guacd"
+    hostname: guacd
+
+  guacamole:
+    image: "guacamole/guacamole"
+    links:
+     - db
+     - guacd
+    environment:
+      POSTGRES_HOSTNAME: db
+      GUACD_HOSTNAME: guacd
+      POSTGRES_DATABASE: guacamole
+      POSTGRES_USER: guacamole
+      POSTGRES_PASSWORD: guacamole
+    ports:
+     - 8080:8080
+
+volumes:
+  sql-scripts:
+  postgres_database:
+        external: true
