@@ -15,7 +15,7 @@ FROM (
 ) permissions (username, permission)
 JOIN guacamole_user ON permissions.username = guacamole_user.username;
 
--- Grant this user permission to read/update/administer self
+-- Grant this user permission to read/update self
 INSERT INTO guacamole_user_permission
 SELECT guacamole_user.user_id, affected.user_id, permission::guacamole_object_permission_type
 FROM (
